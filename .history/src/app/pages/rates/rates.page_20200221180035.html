@@ -1,0 +1,44 @@
+<ion-header>
+    <ion-toolbar color="primary">
+        <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+        <ion-title>Reseñas</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ng-container *ngIf="rate && perfilNegocio; else rateTemplate">
+        <ion-item detail (click)="verCalificaciones(perfilNegocio.idNegocio, 'negocio', rate.calificaciones, perfilNegocio.nombre)">
+            <ion-avatar style="margin-right: 0.5rem;">
+                <img [src]="perfilNegocio.foto" />
+            </ion-avatar>
+            <ion-label>
+                <h2>{{perfilNegocio.nombre}}</h2>
+                <app-stars *ngIf="rate.promedio" [calificacion]="rate.promedio"></app-stars>
+                <p>{{rate.calificaciones}} calificaciones</p>
+            </ion-label>
+        </ion-item>
+        <ion-list *ngIf="repartidores.length > 0">
+            <ion-list-header>
+                <ion-label color="primary">Repartidores</ion-label>
+            </ion-list-header>
+            <ion-item *ngFor="let item of repartidores" detail (click)="verCalificaciones(item.id, 'repartidor', item.calificaciones, item.nombre)">
+                <ion-avatar style="margin-right: 0.5rem;">
+                    <img [src]="item.foto" />
+                </ion-avatar>
+                <ion-label>
+                    <h2>{{item.nombre}}</h2>
+                    <app-stars *ngIf="item.promedio" [calificacion]="item.promedio"></app-stars>
+                    <p *ngIf="item.calificaciones > 1">{{item.calificaciones}} calificaciones</p>
+                </ion-label>
+            </ion-item>
+        </ion-list>
+    </ng-container>
+    <ng-template #rateTemplate>
+        <ion-item lines="none" style="text-align: center;">
+            <ion-label class="ion-text-wrap" color="medium">Completa la información de tu perfil para poder recibir comentarios y reseñas de tus clientes</ion-label>
+        </ion-item>
+    </ng-template>
+
+</ion-content>

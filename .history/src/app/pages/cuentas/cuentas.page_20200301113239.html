@@ -1,0 +1,25 @@
+<ion-header>
+    <ion-toolbar color="primary">
+        <ion-title>{{cuenta | titlecase}}</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-card class="escritorio">
+        <ion-grid fixed>
+            <ion-row>
+                <ion-col size="3" offset="3" *ngFor="let item of cuentas">
+                    {{item.nombre}}
+                </ion-col>
+            </ion-row>
+            <ion-row>
+                <ion-col size="3" *ngFor="let item of cuentas">
+                    Precio
+                </ion-col>
+                <ion-col size="3" *ngFor="let item of cuentas">
+                    {{item.precio}}
+                </ion-col>
+            </ion-row>
+        </ion-grid>
+    </ion-card>
+</ion-content>

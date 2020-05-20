@@ -1,0 +1,47 @@
+<ion-header>
+    <ion-toolbar color="primary">
+        <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+        <ion-title>Horario</ion-title>
+        <ion-buttons slot="end">
+            <ion-button (click)="verDia()">
+                <ion-icon slot="start" name="add"></ion-icon>
+                Nuevo
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-button (click)="compara()" expand="block" fill="clear" shape="round">
+        Compra
+    </ion-button>
+    <ng-container *ngIf="hasHorario; else mainTemplate">
+        <ion-list>
+            <div *ngFor="let item of horario; let i = index">
+                <ion-card *ngIf="item.activo">
+                    <ion-list-header>
+                        <ion-label color="primary">{{item.nombre | titlecase}}</ion-label>
+                        <ion-button (click)="deleteDia(item.nombre, i)" fill="clear" shape="round">
+                            <ion-icon slot="icon-only" name="close"></ion-icon>
+                        </ion-button>
+                    </ion-list-header>
+                    <ion-item lines="none" detail (click)="verDia(item)">
+                        <ion-label color="medium">
+                            <p>Apertura -- {{item.apertura | date:'shortTime'}}</p>
+                            <p>Cierre -- {{item.cierre | date:'shortTime'}}</p>
+                            <p *ngIf="item.comida === 'comida'">Inicio comida -- {{item.inicioComida | date:'shortTime'}}</p>
+                            <p *ngIf="item.comida === 'comida'">Fin comida -- {{item.finComida | date:'shortTime'}}</p>
+                        </ion-label>
+                    </ion-item>
+                </ion-card>
+            </div>
+        </ion-list>
+    </ng-container>
+    <ng-template #mainTemplate>
+        <ion-item lines="none" style="text-align: center;">
+            <ion-label class="ion-text-wrap" color="medium">Aún no has agregado ningún horario</ion-label>
+        </ion-item>
+    </ng-template>
+</ion-content>

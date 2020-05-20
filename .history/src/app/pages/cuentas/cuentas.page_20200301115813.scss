@@ -1,0 +1,17 @@
+$cuadro-size: 80%;
+.margen {
+    width: 90%;
+    margin-left: 5%;
+}
+
+.cuadro {
+    display: flex;
+    width: 10rem;
+    height: 10rem;
+    background: green;
+}
+
+.titulo {
+    margin: auto;
+    color: white;
+}

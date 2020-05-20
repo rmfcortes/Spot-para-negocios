@@ -1,0 +1,27 @@
+<ion-header>
+    <ion-toolbar color="primary">
+        <ion-title>{{cuenta | titlecase}}</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-card class="escritorio">
+        <ion-grid class="ion-no-padding" style="background: hotpink;">
+            <ion-row align-items-start>
+                <ion-col size="3">
+                </ion-col>
+                <ion-col size="3" *ngFor="let item of cuentas">
+                    {{item.nombre}}
+                </ion-col>
+            </ion-row>
+            <ion-row align-items-start>
+                <ion-col size="3" style="background: green;">
+                    Precio
+                </ion-col>
+                <ion-col size="3" *ngFor="let item of cuentas">
+                    {{item.precio | currency:'CAD':'symbol-narrow':'1.0-2'}}
+                </ion-col>
+            </ion-row>
+        </ion-grid>
+    </ion-card>
+</ion-content>

@@ -1,0 +1,396 @@
+<ion-header>
+    <ion-toolbar color="primary">
+        <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+        <ion-title class="comfortaa">Productos</ion-title>
+    </ion-toolbar>
+    <ion-segment scrollable *ngIf="pasillos.pasillos && pasillos.pasillos.length > 0">
+        <ion-segment-button (click)="resetProds()">
+            Todos
+        </ion-segment-button>
+        <ion-segment-button (click)="resetProds('Ofertas')" *ngIf="hasOfertas">
+            Ofertas
+        </ion-segment-button>
+        <ion-segment-button (click)="resetProds(item.nombre)" *ngFor="let item of pasillos.pasillos">
+            {{item.nombre}}
+        </ion-segment-button>
+    </ion-segment>
+    <ion-toolbar *ngIf="productos.length > 0 && tipo === 'productos'">
+        <ion-item>
+            <ion-label color="medium">Cambiar vista</ion-label>
+            <ion-select [value]="pasillos.vista" (ionChange)="vistaElegida($event)" color="primary" okText="Aceptar" cancelText="Cancelar" required>
+                <ion-select-option value="lista">Lista</ion-select-option>
+                <ion-select-option value="bloque">Bloque</ion-select-option>
+            </ion-select>
+        </ion-item>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ng-container *ngIf="prodsReady; else prodTemplate">
+        <ng-container *ngIf="categoria; else mainTemplate">
+            <div class="mobile">
+                <!-- Lista mobile Productos-->
+                <ng-container *ngIf="tipo === 'productos'; else prodServMobileTemplate">
+                    <ng-container *ngIf="pasillos.vista === 'lista'; else vistaMobileTemplate">
+                        <ion-list *ngFor="let item of productos; let i = index">
+                            <ion-list-header>
+                                <ion-label color="primary">{{item.nombre | titlecase}}</ion-label>
+                            </ion-list-header>
+                            <ion-item *ngFor="let prod of item.productos; let y = index" (click)="verProducto(prod)" style="--padding-start: 0" detail>
+                                <ion-grid fixed>
+                                    <ion-row>
+                                        <ion-col size="8">
+                                            <ion-item lines="none">
+                                                <ion-label class="ion-text-wrap">
+                                                    <h2>{{prod.nombre}}</h2>
+                                                    <p style="font-size: 10pt; color:var(--ion-color-medium);">{{prod.descripcion}}</p>
+                                                    <p style="font-size: 12pt; color:var(--ion-color-primary);">{{prod.precio | currency:'CAD':'symbol-narrow':'1.0-2'}}</p>
+                                                </ion-label>
+                                            </ion-item>
+                                        </ion-col>
+                                        <ion-col size="4">
+                                            <preload-image [ratio]="{w: 1, h: .65}" [src]="prod.url">
+                                            </preload-image>
+                                        </ion-col>
+                                    </ion-row>
+                                </ion-grid>
+                            </ion-item>
+                        </ion-list>
+                    </ng-container>
+                    <ng-template #vistaMobileTemplate>
+                        <div [id]="item.nombre" *ngFor="let item of productos; let i = index; let first = first">
+                            <ion-item lines="none">
+                                <h4 style="color: var(--ion-color-primary)" class="ion-text-wrap">{{item.nombre | titlecase}}</h4>
+                            </ion-item>
+                            <div class="card" *ngFor="let prod of item.productos; let y = index" (click)="verProducto(prod)">
+                                <ion-img [src]="prod.url" alt=""></ion-img>
+                                <div class="product-name">
+                                    <h6 class="ion-text-wrap">{{prod.nombre}}</h6>
+                                </div>
+                                <span style="color: var(--ion-color-medium); font-size: 13pt">
+                                    {{prod.precio | currency:'CAD':'symbol-narrow':'1.0-2'}}
+                                </span> <br>
+                                <span style="color: var(--ion-color-medium); font-size: 12pt">
+                                        {{prod.unidad}}
+                                </span>
+                            </div>
+                        </div>
+                    </ng-template>
+                </ng-container>
+                <!-- Lista mobile Servicios-->
+
+                <ng-template #prodServMobileTemplate>
+                    <ion-list *ngFor="let item of productos; let i = index">
+                        <ion-list-header style="--color: var(--ion-color-primary);">
+                            <ion-label>{{item.nombre | titlecase}}</ion-label>
+                        </ion-list-header>
+                        <ion-item *ngFor="let serv of item.productos; let y = index" (click)="verProducto(serv)" style="--padding-start: 0" detail>
+                            <ion-item lines="none">
+                                <ion-label class="ion-text-wrap">{{serv.nombre}}</ion-label>
+                            </ion-item>
+                        </ion-item>
+                    </ion-list>
+                </ng-template>
+            </div>
+
+            <ion-grid class="escritorio ion-no-padding">
+                <ion-row>
+                    <ion-col size="6" class="separate-scroll">
+
+                        <!-- Views selector -->
+                        <ion-card>
+                            <ion-item>
+                                <ion-label color="medium">Plantilla</ion-label>
+                                <ion-select [(ngModel)]="pasillos.vista" color="medium" okText="'Aceptar'" cancelText="'Cancelar'" (ionChange)="vistaElegida($event)">
+                                    <ion-select-option value="list-img">Lista con imágenes</ion-select-option>
+                                    <ion-select-option value="list">Lista</ion-select-option>
+                                    <ion-select-option value="block">Tarjetas pequeñas</ion-select-option>
+                                    <ion-select-option value="cards">Tarjetas</ion-select-option>
+                                </ion-select>
+                            </ion-item>
+                        </ion-card>
+
+                        <!-- Section list -->
+                        <ion-card>
+                            <ion-item>
+                                <ion-label color="medium">Pasillos</ion-label>
+                                <ion-icon slot="end" name="add" color="primary" (click)="showSectionInput()"></ion-icon>
+                                <ion-icon slot="end" name="chevron-down" color="primary" *ngIf="listaPasillos.length > 0 && viewSectionList === false" (click)="viewSectionList = true"></ion-icon>
+                                <ion-icon slot="end" name="chevron-up" color="primary" *ngIf="listaPasillos.length > 0 && viewSectionList === true" (click)="viewSectionList = false"></ion-icon>
+                            </ion-item>
+                            <ion-item *ngIf="viewSectionInput">
+                                <ion-input type="text" [(ngModel)]="nuevo_pasillo" placeholder="Nuevo pasillo" autoFocus="true" id="inputSection" #inputSection></ion-input>
+                                <ion-icon slot="end" name="close" color="medium" (click)="viewSectionInput = false"></ion-icon>
+                                <ion-button slot="end" (click)="addPasillo()" shape="round">
+                                    Agregar
+                                </ion-button>
+                            </ion-item>
+                            <ion-reorder-group (ionItemReorder)="doReorder($event)" disabled="false" *ngIf="viewSectionList">
+                                <ion-item *ngFor="let section of listaPasillos; let i = index">
+                                    <ng-container *ngIf="section.edit; else editTemplate">
+                                        <ion-input [(ngModel)]="section.nombre" #inputSectionEdit></ion-input>
+                                        <ion-reorder slot="end"></ion-reorder>
+                                        <ion-icon slot="end" name="save" color="success" (click)="saveEditSection(i)"></ion-icon>
+                                        <ion-icon slot="end" name="close" color="danger" (click)="cancelEditPasillo(i)"></ion-icon>
+                                    </ng-container>
+                                    <ng-template #editTemplate>
+                                        <ion-label>{{section.nombre}}</ion-label>
+                                        <ion-reorder slot="end"></ion-reorder>
+                                        <ion-icon slot="end" name="pencil" color="primary" (click)="editPasillo(i)"></ion-icon>
+                                        <ion-icon slot="end" name="trash" color="danger" (click)="deletePasillo(i, section.nombre)"></ion-icon>
+                                    </ng-template>
+                                </ion-item>
+                            </ion-reorder-group>
+                        </ion-card>
+
+                        <!-- Products list -->
+
+                        <ion-card *ngIf="listaPasillos.length > 0">
+                            <ion-item>
+                                <ion-label color="medium">Productos</ion-label>
+                                <ion-icon slot="end" name="add" color="primary" (click)="verProducto(null)"></ion-icon>
+                                <ion-icon slot="end" name="chevron-down" color="primary" *ngIf="viewProducts === false && productosCargados > 0" (click)="viewProducts = true"></ion-icon>
+                                <ion-icon slot="end" name="chevron-up" color="primary" *ngIf="viewProducts === true" (click)="viewProducts = false"></ion-icon>
+                            </ion-item>
+                            <ng-container *ngIf="viewProducts">
+                                <ion-list *ngFor="let section of productos">
+                                    <ion-list-header *ngIf="section.productos && section.productos.length > 0">
+                                        <ion-label color="primary" style="font-size: 10px;">{{section.nombre}}</ion-label>
+                                    </ion-list-header>
+                                    <ion-item *ngFor="let product of section.productos">
+                                        <ion-label>{{product.nombre}}</ion-label>
+                                        <ion-icon name="pencil" slot="end" color="primary" (click)="verProducto(product)"></ion-icon>
+                                    </ion-item>
+                                </ion-list>
+                                <ion-button *ngIf="!noMore" (click)="loadMoreProducts()" expand="block" fill="clear" shape="round">
+                                    Ver más
+                                </ion-button>
+                            </ng-container>
+                        </ion-card>
+
+                        <!-- Lista productos escritorio -->
+                        <ng-container *ngIf="tipo === 'productos'; else prodServTemplate">
+                            <ng-container *ngIf="pasillos.vista === 'lista'; else vistaTemplate">
+                                <ion-list *ngFor="let item of productos; let i = index">
+                                    <ion-list-header color="medium">
+                                        <ion-label>{{item.nombre | titlecase}}</ion-label>
+                                    </ion-list-header>
+                                    <ion-card *ngFor="let prod of item.productos; let y = index" class="shadow" [ngStyle]="{'border-right': i === iSel && y === ySel ? 'solid var(--ion-color-primary) 5px' : null}">
+                                        <ion-item (click)="newEditProd(prod, i, y)" [style.cursor]="i === iSel? null :'pointer'" style="--padding-start: 0" detail lines="none">
+                                            <ion-grid fixed>
+                                                <ion-row>
+                                                    <ion-col size="8">
+                                                        <ion-item lines="none">
+                                                            <ion-label class="ion-text-wrap">
+                                                                <h2 style="color: var(--ion-color-primary);">{{prod.nombre}}</h2>
+                                                                <p style="font-size: 10pt; color:var(--ion-color-medium);">{{prod.descripcion}}</p>
+                                                                <p style="font-size: 12pt; color:var(--ion-color-primary);">{{prod.precio | currency:'CAD':'symbol-narrow':'1.0-2'}}</p>
+                                                            </ion-label>
+                                                        </ion-item>
+                                                    </ion-col>
+                                                    <ion-col size="4" class="ion-align-self-center">
+                                                        <div class="border radius10 shadow">
+                                                            <preload-image [ratio]="{w: 1, h: .75}" [src]="prod.url">
+                                                            </preload-image>
+                                                        </div>
+                                                    </ion-col>
+                                                </ion-row>
+                                            </ion-grid>
+                                        </ion-item>
+                                    </ion-card>
+                                </ion-list>
+                            </ng-container>
+                            <ng-template #vistaTemplate>
+                                <div [id]="item.nombre" *ngFor="let item of productos; let i = index; let first = first">
+                                    <ion-item lines="none">
+                                        <h4 style="color: var(--ion-color-primary)" class="ion-text-wrap">{{item.nombre | titlecase}}</h4>
+                                    </ion-item>
+                                    <div class="card-esc" *ngFor="let prod of item.productos; let y = index" (click)="newEditProd(prod, i, y)" [style.cursor]="i === iSel? null :'pointer'" [ngStyle]="{'border': i === iSel && y === ySel ? 'solid var(--ion-color-primary) 5px' : null}">
+                                        <ion-img [src]="prod.url" alt=""></ion-img>
+                                        <div class="product-name">
+                                            <h6 class="ion-text-wrap">{{prod.nombre}}</h6>
+                                        </div>
+                                        <span style="color: var(--ion-color-medium); font-size: 13pt">
+                                            {{prod.precio | currency:'CAD':'symbol-narrow':'1.0-2'}}
+                                        </span> <br>
+                                        <span style="color: var(--ion-color-medium); font-size: 12pt">
+                                                {{prod.unidad}}
+                                        </span>
+                                    </div>
+                                </div>
+                            </ng-template>
+                        </ng-container>
+
+                        <!-- Lista servicios escritorio -->
+                        <ng-template #prodServTemplate>
+                            <ion-list *ngFor="let item of productos; let i = index">
+                                <ion-list-header style="--color: var(--ion-color-primary);">
+                                    <ion-label>{{item.nombre | titlecase}}</ion-label>
+                                </ion-list-header>
+                                <ion-item *ngFor="let serv of item.productos; let y = index" (click)="newEditProd(serv, i, y)" style="--padding-start: 0" detail>
+                                    <ion-item lines="none">
+                                        <ion-label class="ion-text-wrap">{{serv.nombre}}</ion-label>
+                                    </ion-item>
+                                </ion-item>
+                            </ion-list>
+                        </ng-template>
+                    </ion-col>
+                    <ion-col size="6" class="separate-scroll">
+                        <!-- Formulario when escritorio -->
+                        <div *ngIf="editProducto">
+                            <ng-container *ngIf="producto && producto.url; else fotoTemplate">
+                                <div style="background: white !important; cursor: pointer; text-align: center;">
+                                    <img [src]="producto.url" style="height: 10rem;" (click)="foto1.click()" /> <br>
+                                    <input style="display: none" (change)="cropImage($event, 1/.75, true, 60)" type="file" #foto1> <br>
+                                </div>
+                            </ng-container>
+                            <ng-template #fotoTemplate>
+                                <div style="text-align: center; cursor: pointer;">
+                                    <img [src]="noFoto" style="height: 10rem" (click)="foto1.click()" /> <br>
+                                    <input style="display: none" (change)="cropImage($event, 1/.75, true, 60)" type="file" #foto1> <br>
+                                    <ion-label color="medium">Agrega una imagen o foto de tu producto</ion-label>
+                                </div>
+                            </ng-template>
+
+                            <div>
+                                <form #forma="ngForm" (submit)="guardarCambios()">
+                                    <ion-item>
+                                        <ion-label color="medium" position="floating">Nombre</ion-label>
+                                        <ion-input (keyup.enter)="$event.target.blur();" [disabled]="guardando" [(ngModel)]="producto.nombre" type="text" name="nombre" required minlength="3"></ion-input>
+                                    </ion-item>
+                                    <ion-item *ngIf="tipo === 'productos'">
+                                        <ion-label color="medium" position="floating">Precio</ion-label>
+                                        <ion-input (keyup.enter)="$event.target.blur();" [disabled]="guardando" [(ngModel)]="producto.precio" type="number" name="precio" required minlength="3"></ion-input>
+                                    </ion-item>
+                                    <ion-item>
+                                        <ion-label color="medium" position="floating">Código(opcional)</ion-label>
+                                        <ion-input (keyup.enter)="$event.target.blur();" [disabled]="guardando" [(ngModel)]="producto.codigo" type="text" name="codigo" minlength="3"></ion-input>
+                                    </ion-item>
+                                    <ion-item>
+                                        <ion-label color="medium" position="floating">Descripción</ion-label>
+                                        <ng-container *ngIf="tipo === 'productos'; else tipoTemp">
+                                            <ion-textarea (keyup.enter)="$event.target.blur();" maxlength="70" [disabled]="guardando" [(ngModel)]="producto.descripcion" type="text" name="descripcion" minlength="5"></ion-textarea>
+                                        </ng-container>
+                                        <ng-template #tipoTemp>
+                                            <ion-textarea (keyup.enter)="$event.target.blur();" autoGrow="true" [disabled]="guardando" [(ngModel)]="producto.descripcion" type="text" name="descripcion" minlength="5"></ion-textarea>
+                                        </ng-template>
+                                    </ion-item>
+                                    <ion-item>
+                                        <ion-label color="medium">Departamento</ion-label>
+                                        <ion-select [value]="producto.pasillo" [disabled]="listaPasillos.length <= 0" (ionChange)="pasilloElegido($event)" color="medium" okText="Aceptar" cancelText="Cancelar" required>
+                                            <ion-select-option *ngFor="let item of listaPasillos" [value]="item.nombre">{{item.nombre | titlecase}}</ion-select-option>
+                                        </ion-select>
+                                    </ion-item>
+                                    <ion-grid *ngIf="producto.pasillo === 'Ofertas'">
+                                        <ion-row>
+                                            <ion-col size="4">
+                                                <ion-item lines="none">
+                                                    <ion-label color="medium" position="fixed">Foto oferta</ion-label>
+                                                </ion-item>
+                                            </ion-col>
+                                            <ion-col size="8" style="cursor: pointer;">
+                                                <img style="float: right;" [src]="producto.foto || noLogo" style="height: 8rem;" (click)="foto2.click()" />
+                                                <input style="display: none" (change)="cropImage($event, 1/.45, false, 100, 800)" type="file" #foto2>
+                                            </ion-col>
+                                        </ion-row>
+                                    </ion-grid>
+                                    <ion-item *ngIf="tipo === 'productos'">
+                                        <ion-label color="medium">Complementos</ion-label>
+                                        <ion-button (click)="addComplemento()" size="small">
+                                            Nuevo complemento
+                                            <ion-icon name="add"></ion-icon>
+                                        </ion-button>
+                                    </ion-item>
+                                    <div *ngIf="tipo === 'productos'">
+                                        <ion-list *ngFor="let item of complementos; let i = index">
+                                            <ion-list-header>
+                                                <ion-label color="primary">{{item.titulo}}</ion-label>
+                                                <ion-button (click)="addProductoComplemento(i)" size="small">
+                                                    Agrega producto
+                                                </ion-button>
+                                                <ion-button fill="outline" (click)="deleteComplemento(i)" size="small">
+                                                    <ion-icon name="trash"></ion-icon>
+                                                </ion-button>
+                                            </ion-list-header>
+                                            <ion-item>
+                                                <ion-label>Obligatorio</ion-label>
+                                                <ion-checkbox [(ngModel)]="item.obligatorio" name="{{i}}"></ion-checkbox>
+                                            </ion-item>
+                                            <ion-item>
+                                                <ion-label color="medium" position="floating">Máximo de opciones a elegir</ion-label>
+                                                <ion-input (keyup.enter)="$event.target.blur();" [disabled]="guardando" [(ngModel)]="item.limite" type="number" name="limite" required></ion-input>
+                                            </ion-item>
+                                            <ion-item *ngFor="let prods of item.productos; let y = index">
+                                                <ion-label color="medium">{{prods.nombre}}</ion-label>
+                                                <ion-label color="medium">+{{prods.precio | currency:'CAD':'symbol-narrow':'1.0-2'}}</ion-label>
+                                                <ion-icon slot="end" name="trash" (click)="deleteProdCom(i, y)"></ion-icon>
+                                            </ion-item>
+                                        </ion-list>
+                                    </div>
+                                    <ion-button class="boton-margen" style="margin-top: 2rem" [disabled]="eliminando || !forma.valid || !producto.url || !producto.pasillo || guardando" expand="block" type="submit">
+                                        Guardar cambios
+                                        <ion-spinner *ngIf="guardando" name="dots"></ion-spinner>
+                                    </ion-button>
+                                    <ion-button *ngIf="producto.id" class="boton-margen" [disabled]="guardando || eliminando" expand="block" color="dark" (click)="eliminarProducto()">
+                                        Eliminar
+                                        <ion-spinner *ngIf="eliminando" name="dots"></ion-spinner>
+                                    </ion-button>
+                                    <ion-button class="boton-margen" [disabled]="guardando || eliminando" expand="block" color="danger" (click)="cancelEdit()">
+                                        Cancelar
+                                    </ion-button>
+                                </form>
+                            </div>
+                        </div>
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
+        </ng-container>
+
+
+        <ng-template #mainTemplate>
+            <ion-item lines="none" style="text-align: center;">
+                <ion-label color="medium" class="ion-text-wrap">Antes de agregar productos, completa tu perfil. Es muy importante para clasificar tus productos o servicios</ion-label>
+            </ion-item>
+        </ng-template>
+    </ng-container>
+    <ng-template #prodTemplate>
+        <ion-card class="boton-margen">
+            <ion-list>
+                <ion-item *ngFor="let item of [1,2,3,4,5,6]">
+                    <ion-label>
+                        <h2>
+                            <ion-skeleton-text animated style="width: 50%;"></ion-skeleton-text>
+                        </h2>
+                        <p>
+                            <ion-skeleton-text animated style="width: 90%;"></ion-skeleton-text>
+                        </p>
+                        <p>
+                            <ion-skeleton-text animated style="width: 65%;"></ion-skeleton-text>
+                        </p>
+                    </ion-label>
+                    <ion-thumbnail style="margin-right: 0.5rem;" slot="end">
+                        <ion-skeleton-text animated></ion-skeleton-text>
+                    </ion-thumbnail>
+                </ion-item>
+            </ion-list>
+        </ion-card>
+    </ng-template>
+
+    <ng-container *ngIf="pasilloFiltro; else elseTemplate">
+        <ion-infinite-scroll threshold="100px" (ionInfinite)="loadDataListaFiltrada($event)">
+            <ion-infinite-scroll-content loadingSpinner="dots">
+            </ion-infinite-scroll-content>
+        </ion-infinite-scroll>
+    </ng-container>
+    <ng-template #elseTemplate>
+        <ion-infinite-scroll threshold="100px" (ionInfinite)="loadDataLista($event)">
+            <ion-infinite-scroll-content loadingSpinner="dots">
+            </ion-infinite-scroll-content>
+        </ion-infinite-scroll>
+    </ng-template>
+
+</ion-content>
+
+<app-no-network></app-no-network>

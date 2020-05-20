@@ -1,0 +1,53 @@
+<ion-header>
+    <ion-toolbar color="primary">
+        <ion-title>{{cuenta | titlecase}}</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-card class="escritorio margen">
+        <ion-grid class="ion-no-padding">
+            <ion-row class="ion-align-items-start">
+                <ion-col size="4">
+                </ion-col>
+                <ion-col size="8/3" *ngFor="let item of cuentas">
+                    <div class="cuadro" [style.background]="item.actual ? '#f37208' :'#e0a331'">
+                        <div class="titulo">
+                            <h1>{{item.nombre}}</h1>
+                        </div>
+                    </div>
+                </ion-col>
+            </ion-row>
+            <ion-row class="ion-align-items-start">
+                <ion-col size="4">
+                    <ion-item lines="none">
+                        <ion-label color="medium">Precio</ion-label>
+                    </ion-item>
+                </ion-col>
+                <ion-col size="8/3" *ngFor="let item of cuentas">
+                    <ion-item style="text-align: center;" lines="none">
+                        <ion-label [style.color]="item.actual ? '#f37208' :'#989aa2'">
+                            {{item.precio | currency:'CAD':'symbol-narrow':'1.0-2'}}
+                        </ion-label>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+            <hr style="color: grey;">
+            <ion-row class="ion-align-items-start">
+                <ion-col size="4">
+                    <ion-item lines="none">
+                        <ion-label color="medium">Precio</ion-label>
+                    </ion-item>
+                </ion-col>
+                <ion-col size="8/3" *ngFor="let item of cuentas">
+                    <ion-item style="text-align: center;" lines="none">
+                        <ion-label [style.color]="item.actual ? '#f37208' :'#989aa2'">
+                            {{item.precio | currency:'CAD':'symbol-narrow':'1.0-2'}}
+                        </ion-label>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+            <hr style="color: grey;">
+        </ion-grid>
+    </ion-card>
+</ion-content>

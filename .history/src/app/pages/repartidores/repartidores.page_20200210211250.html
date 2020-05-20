@@ -1,0 +1,35 @@
+<ion-header>
+    <ion-toolbar color="primary">
+        <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+        <ion-title>Repartidores</ion-title>
+        <ion-buttons slot="end">
+            <ion-button (click)="verRepartidor()">
+                <ion-icon slot="start" name="add"></ion-icon>
+                Nuevo
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ng-container *ngIf="repartidores.length > 0; else mainTemplate">
+        <ion-list>
+            <ion-card *ngFor="let item of repartidores">
+                <ion-item (click)="verRepartidor(item)" lines="none" detail>
+                    <ion-avatar slot="start">
+                        <img [src]="item.foto || noRepartidor" />
+                    </ion-avatar>
+                    <ion-label>{{item.nombre | titlecase}}</ion-label>
+                </ion-item>
+            </ion-card>
+        </ion-list>
+    </ng-container>
+    <ng-template #mainTemplate>
+        <ion-item style="text-align: center;" lines="none">
+            <ion-label class="ion-text-wrap" color="medium">Agrega tu primer repartidor para poder asignarle pedidos.</ion-label>
+        </ion-item>
+    </ng-template>
+
+</ion-content>

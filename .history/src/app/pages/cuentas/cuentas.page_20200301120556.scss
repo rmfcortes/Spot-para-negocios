@@ -1,0 +1,31 @@
+.margen {
+    width: 90%;
+    margin-left: 5%;
+}
+
+.cuadro {
+    position: relative;
+    display: flex;
+    width: 9rem;
+    height: 9rem;
+    margin: auto;
+}
+
+.pick {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border: 20px solid transparent;
+    border-top-color: #00aabb;
+    border-bottom: 0;
+    margin-left: -20px;
+    margin-bottom: -20px;
+}
+
+.titulo {
+    margin: auto;
+    color: white;
+}

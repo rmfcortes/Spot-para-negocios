@@ -1,0 +1,7 @@
+{
+  "name": "revNegocio",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "angular"
+}

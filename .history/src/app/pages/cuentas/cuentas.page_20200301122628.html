@@ -1,0 +1,158 @@
+<ion-header>
+    <ion-toolbar color="primary">
+        <ion-title>{{cuenta | titlecase}}</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-card class="escritorio margen">
+        <ion-grid class="ion-no-padding">
+            <ion-row class="ion-align-items-start">
+                <ion-col size="4">
+                </ion-col>
+                <ion-col size="8/3" *ngFor="let item of cuentas">
+                    <div class="cuadro" [style.background]="item.actual ? '#f37208' :'#e0a331'">
+                        <div class="titulo">
+                            <h1>{{item.nombre}}</h1>
+                        </div>
+                    </div>
+                </ion-col>
+            </ion-row>
+            <ion-row class="ion-align-items-start">
+                <ion-col size="4">
+                    <ion-item lines="none">
+                        <ion-label color="medium">Precio</ion-label>
+                    </ion-item>
+                </ion-col>
+                <ion-col size="8/3" *ngFor="let item of cuentas">
+                    <ion-item style="text-align: center;" lines="none">
+                        <ion-label [style.color]="item.actual ? '#f37208' :'#989aa2'" style="font-size: x-large;">
+                            {{item.precio | currency:'CAD':'symbol-narrow':'1.0-2'}}
+                        </ion-label>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+            <hr>
+            <ion-row class="ion-align-items-start">
+                <ion-col size="4">
+                    <ion-item lines="none">
+                        <ion-label color="medium">Límite de productos</ion-label>
+                    </ion-item>
+                </ion-col>
+                <ion-col size="8/3" *ngFor="let item of cuentas">
+                    <ion-item style="text-align: center;" lines="none">
+                        <ion-label [style.color]="item.actual ? '#f37208' :'#989aa2'">
+                            {{item.productos}}
+                        </ion-label>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+            <hr>
+            <ion-row class="ion-align-items-start">
+                <ion-col size="4">
+                    <ion-item lines="none">
+                        <ion-label color="medium">Límite de SubCategorías</ion-label>
+                    </ion-item>
+                </ion-col>
+                <ion-col size="8/3" *ngFor="let item of cuentas">
+                    <ion-item style="text-align: center;" lines="none">
+                        <ion-label [style.color]="item.actual ? '#f37208' :'#989aa2'">
+                            {{item.subCategorias}}
+                        </ion-label>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+            <hr>
+            <ion-row class="ion-align-items-start">
+                <ion-col size="4">
+                    <ion-item lines="none">
+                        <ion-label color="medium">Recepción de pedidos</ion-label>
+                    </ion-item>
+                </ion-col>
+                <ion-col size="8/3" *ngFor="let item of cuentas">
+                    <ion-item style="text-align: center;" lines="none">
+                        <ion-label [style.color]="item.actual ? '#f37208' :'#989aa2'">
+                            <ng-container *ngIf="item.pedidos; else pedTemplate">
+                                <ion-icon name="checkmark"></ion-icon>
+                            </ng-container>
+                            <ng-template #pedTemplate>
+                                <ion-icon name="close"></ion-icon>
+                            </ng-template>
+                        </ion-label>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+            <hr>
+            <ion-row class="ion-align-items-start">
+                <ion-col size="4">
+                    <ion-item lines="none">
+                        <ion-label color="medium">Anunciar ofertas</ion-label>
+                    </ion-item>
+                </ion-col>
+                <ion-col size="8/3" *ngFor="let item of cuentas">
+                    <ion-item style="text-align: center;" lines="none">
+                        <ion-label [style.color]="item.actual ? '#f37208' :'#989aa2'">
+                            <ng-container *ngIf="item.ofertas; else pedTemplate">
+                                <ion-icon name="checkmark"></ion-icon>
+                            </ng-container>
+                            <ng-template #pedTemplate>
+                                <ion-icon name="close"></ion-icon>
+                            </ng-template>
+                        </ion-label>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+            <hr>
+            <ion-row class="ion-align-items-start">
+                <ion-col size="4">
+                    <ion-item lines="none">
+                        <ion-label class="ion-text-wrap" color="medium">Vista en pantalla principal 'Populares'</ion-label>
+                    </ion-item>
+                </ion-col>
+                <ion-col size="8/3" *ngFor="let item of cuentas">
+                    <ion-item style="text-align: center;" lines="none">
+                        <ion-label [style.color]="item.actual ? '#f37208' :'#989aa2'">
+                            <ng-container *ngIf="item.populares; else pedTemplate">
+                                <ion-icon name="checkmark"></ion-icon>
+                            </ng-container>
+                            <ng-template #pedTemplate>
+                                <ion-icon name="close"></ion-icon>
+                            </ng-template>
+                        </ion-label>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+            <hr>
+            <ion-row class="ion-align-items-start">
+                <ion-col size="4">
+                    <ion-item lines="none">
+                        <ion-label class="ion-text-wrap" color="medium">Vista en pantalla principal 'Más Vendidos'</ion-label>
+                    </ion-item>
+                </ion-col>
+                <ion-col size="8/3" *ngFor="let item of cuentas">
+                    <ion-item style="text-align: center;" lines="none">
+                        <ion-label [style.color]="item.actual ? '#f37208' :'#989aa2'">
+                            <ng-container *ngIf="item.vendidos; else pedTemplate">
+                                <ion-icon name="checkmark"></ion-icon>
+                            </ng-container>
+                            <ng-template #pedTemplate>
+                                <ion-icon name="close"></ion-icon>
+                            </ng-template>
+                        </ion-label>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+            <ion-row class="ion-align-items-start">
+                <ion-col size="4">
+                </ion-col>
+                <ion-col size="8/3" *ngFor="let item of cuentas">
+                    <ion-item>
+                        <ion-button style="margin: auto;" (click)="onClick()" shape="round">
+                            Elegir
+                        </ion-button>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+        </ion-grid>
+    </ion-card>
+</ion-content>

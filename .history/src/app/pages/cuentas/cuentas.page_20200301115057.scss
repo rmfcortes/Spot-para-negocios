@@ -1,0 +1,19 @@
+.margen {
+    width: 90%;
+    margin-left: 5%;
+}
+
+.cuadro {
+    display: table;
+    width: 80%;
+    padding-bottom: 80%;
+    background: green;
+    margin: auto;
+}
+
+.titulo {
+    text-align: center;
+    display: table-cell;
+    vertical-align: middle;
+    color: white;
+}

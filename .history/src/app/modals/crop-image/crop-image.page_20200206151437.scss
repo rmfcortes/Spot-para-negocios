@@ -1,0 +1,13 @@
+#contenedor {
+    height: 100%;
+    width: 100%;
+    position: relative;
+}
+
+#foto {
+    position: absolute;
+    left: 50%;
+    margin-left: -150px;
+    top: 50%;
+    margin-top: -150px;
+}

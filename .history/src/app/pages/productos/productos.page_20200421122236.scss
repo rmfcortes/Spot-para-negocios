@@ -1,0 +1,38 @@
+.card {
+    // border: lightgray solid 0.25px;
+    width: 28vw;
+    max-width: 28vw;
+    display: inline-block;
+    text-align: center;
+    padding: .75rem;
+    margin: 0;
+    font-size: 11pt;
+    overflow: hidden;
+    text-overflow: ellipsis !important;
+    white-space: nowrap;
+}
+
+.card-esc {
+    // border: lightgray solid 0.25px;
+    width: 28%;
+    max-width: 28%;
+    display: inline-block;
+    text-align: center;
+    padding: .75rem;
+    margin: 0;
+    font-size: 11pt;
+    overflow: hidden;
+    text-overflow: ellipsis !important;
+    white-space: nowrap;
+}
+
+.product-name {
+    height: 75px;
+    overflow: hidden;
+    text-overflow: ellipsis !important;
+    white-space: nowrap;
+}
+
+ion-icon {
+    cursor: pointer;
+}

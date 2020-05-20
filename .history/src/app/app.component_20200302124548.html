@@ -1,0 +1,33 @@
+<ion-app>
+    <ion-split-pane contentId="main-content">
+        <ion-menu contentId="main-content" type="overlay" swipeGesture="false">
+            <ion-header>
+                <ion-toolbar color="primary">
+                    <ion-title>
+                        <span class="comfortaa">Spot</span>
+                    </ion-title>
+                </ion-toolbar>
+            </ion-header>
+            <ion-content>
+                <ion-list>
+                    <ion-menu-toggle auto-hide="false">
+                        <ion-item *ngFor="let p of appPages; let first = first" routerLinkActive="activo" [routerDirection]="'root'" [routerLink]="[p.url]">
+                            <ion-icon slot="start" [name]="p.icon"></ion-icon>
+                            <ion-label class="comfortaa">
+                                {{p.title}}
+                            </ion-label>
+                            <ion-badge *ngIf="first && pedidos > 0" color="primary" slot="end">{{pedidos}}</ion-badge>
+                        </ion-item>
+                        <ion-item (click)="salir()" style="cursor: pointer;">
+                            <ion-icon color="primary" slot="start" name="log-out"></ion-icon>
+                            <ion-label class="comfortaa">
+                                Cerrar sesión
+                            </ion-label>
+                        </ion-item>
+                    </ion-menu-toggle>
+                </ion-list>
+            </ion-content>
+        </ion-menu>
+        <ion-router-outlet id="main-content"></ion-router-outlet>
+    </ion-split-pane>
+</ion-app>

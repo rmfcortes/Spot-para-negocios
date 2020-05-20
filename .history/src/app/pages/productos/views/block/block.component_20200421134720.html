@@ -1,0 +1,21 @@
+<div [id]="item.name" *ngFor="let item of sections; let i = index; let first = first" [style.display]="item.products && item.products.length > 0 ? 'initial' : 'none'">
+    <ion-item lines="none">
+        <h6 class="ion-text-wrap header">{{item.name | titlecase}}</h6>
+    </ion-item>
+    <ngx-masonry [options]="myOptions" style="width: 100%">
+        <div ngxMasonryItem *ngFor="let prod of item.products" style="width: 48.5%; margin-bottom: 0.5rem;">
+            <ion-card class="card radius10 background-card" style="cursor: pointer;" (click)="presentProduct(prod)">
+                <img [src]="prod.url" width="100%">
+                <div class="price-box price-box-background">
+                    <ion-text style="margin: 0;" class="price-product" *ngIf="prod.price">
+                        {{prod.price | currency:'CAD':'symbol-narrow':'1.0-2'}}
+                    </ion-text>
+                </div>
+                <h6 class="ion-text-wrap name-product" style="margin-left: 0.5rem; margin-top: 0;">{{prod.name}}</h6>
+                <div style="padding: 0 0.5rem 0.75rem 0.5rem" class="price-product" *ngIf="prod.price">
+                    {{prod.description}}
+                </div>
+            </ion-card>
+        </div>
+    </ngx-masonry>
+</div>

@@ -1,0 +1,133 @@
+<ion-header>
+    <ion-toolbar color="primary">
+        <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+        <ion-title>Horario</ion-title>
+        <ion-buttons slot="end">
+            <ion-button (click)="verDia()">
+                <ion-icon slot="start" name="add"></ion-icon>
+                Nuevo
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <div class="mobile">
+        <ng-container *ngIf="horarioReady; else loadMobileTemplate">
+            <ng-container *ngIf="hasHorario; else mainTemplate">
+                <ion-list>
+                    <div *ngFor="let item of horario; let i = index">
+                        <ion-card *ngIf="item.activo">
+                            <ion-list-header>
+                                <ion-label color="primary">{{item.nombre | titlecase}}</ion-label>
+                                <ion-button (click)="deleteDia(item.nombre, i)" fill="clear" shape="round">
+                                    <ion-icon slot="icon-only" name="close"></ion-icon>
+                                </ion-button>
+                            </ion-list-header>
+                            <ion-item lines="none" detail (click)="verDia(item)">
+                                <ion-label color="medium">
+                                    <p>Apertura -- {{item.apertura | date:'shortTime'}}</p>
+                                    <p>Cierre -- {{item.cierre | date:'shortTime'}}</p>
+                                    <p *ngIf="item.comida === 'comida'">Inicio comida -- {{item.inicioComida | date:'shortTime'}}</p>
+                                    <p *ngIf="item.comida === 'comida'">Fin comida -- {{item.finComida | date:'shortTime'}}</p>
+                                </ion-label>
+                            </ion-item>
+                        </ion-card>
+                    </div>
+                </ion-list>
+            </ng-container>
+            <ng-template #mainTemplate>
+                <ion-item lines="none" style="text-align: center;">
+                    <ion-label class="ion-text-wrap" color="medium">Aún no has agregado ningún horario</ion-label>
+                </ion-item>
+            </ng-template>
+        </ng-container>
+        <ng-template #loadMobileTemplate>
+            <ion-card class="boton-margen">
+                <ion-list>
+                    <ion-item *ngFor="let item of [1,2,3,4,5,6]">
+                        <ion-label>
+                            <h2>
+                                <ion-skeleton-text animated style="width: 50%;"></ion-skeleton-text>
+                            </h2>
+                            <p>
+                                <ion-skeleton-text animated style="width: 90%;"></ion-skeleton-text>
+                            </p>
+                            <p>
+                                <ion-skeleton-text animated style="width: 65%;"></ion-skeleton-text>
+                            </p>
+                        </ion-label>
+                    </ion-item>
+                </ion-list>
+            </ion-card>
+        </ng-template>
+    </div>
+    <div class="escritorio">
+        <ng-container *ngIf="horarioReady; else loadTemplate">
+            <ng-container *ngIf="hasHorario; else mainTemplate">
+                <ion-grid fixed>
+                    <ion-row>
+                        <ion-col size="5">
+                            <ion-list>
+                                <div *ngFor="let item of horario; let i = index">
+                                    <ion-card *ngIf="item.activo">
+                                        <ion-list-header>
+                                            <ion-label color="primary">{{item.nombre | titlecase}}</ion-label>
+                                            <ion-button (click)="deleteDia(item.nombre, i)" fill="clear" shape="round">
+                                                <ion-icon slot="icon-only" name="close"></ion-icon>
+                                            </ion-button>
+                                        </ion-list-header>
+                                        <ion-item lines="none" detail (click)="verDia(item)">
+                                            <ion-label color="medium">
+                                                <p>Apertura -- {{item.apertura | date:'shortTime'}}</p>
+                                                <p>Cierre -- {{item.cierre | date:'shortTime'}}</p>
+                                                <p *ngIf="item.comida === 'comida'">Inicio comida -- {{item.inicioComida | date:'shortTime'}}</p>
+                                                <p *ngIf="item.comida === 'comida'">Fin comida -- {{item.finComida | date:'shortTime'}}</p>
+                                            </ion-label>
+                                        </ion-item>
+                                    </ion-card>
+                                </div>
+                            </ion-list>
+                        </ion-col>
+                        <ion-col size="7">
+
+                        </ion-col>
+                    </ion-row>
+                </ion-grid>
+            </ng-container>
+            <ng-template #mainTemplate>
+                <ion-item lines="none" style="text-align: center;">
+                    <ion-label class="ion-text-wrap" color="medium">Aún no has agregado ningún horario</ion-label>
+                </ion-item>
+            </ng-template>
+        </ng-container>
+        <ng-template #loadTemplate>
+            <ion-grid fixed>
+                <ion-row>
+                    <ion-col size="6">
+                        <ion-card class="boton-margen">
+                            <ion-list>
+                                <ion-item *ngFor="let item of [1,2,3,4,5,6]">
+                                    <ion-label>
+                                        <h2>
+                                            <ion-skeleton-text animated style="width: 50%;"></ion-skeleton-text>
+                                        </h2>
+                                        <p>
+                                            <ion-skeleton-text animated style="width: 90%;"></ion-skeleton-text>
+                                        </p>
+                                        <p>
+                                            <ion-skeleton-text animated style="width: 65%;"></ion-skeleton-text>
+                                        </p>
+                                    </ion-label>
+                                </ion-item>
+                            </ion-list>
+                        </ion-card>
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
+        </ng-template>
+
+    </div>
+</ion-content>
